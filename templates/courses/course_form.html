@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}{% if edit_mode %}
+                Edit Course
+            {% else %}
+                Create Course
+            {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-lg">
+            <div class="card-body p-4">
+                <h3 class="card-title text-center mb-4 text-white">
+                    {% if edit_mode %}
+                        Edit Course
+                    {% else %}
+                        Create Course
+                    {% endif %}
+                </h3>
+
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_title" class="form-label text-white">Course Title</label>
+                        {{ form.title|add_class:"form-control"|attr:"placeholder:Enter course title" }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_description" class="form-label text-white">Description</label>
+                        {{ form.description|add_class:"form-control"|attr:"placeholder:Enter course description" }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_category" class="form-label text-white">Category</label>
+                        {{ form.category|add_class:"form-control" }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_thumbnail" class="form-label text-white">Thumbnail</label>
+                        {{ form.thumbnail|add_class:"form-control" }}
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Create Course</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

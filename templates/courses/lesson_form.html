@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <h3 class="card-title mb-4">Add Lesson to {{ course.title }}</h3>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label for="id_title" class="form-label">Lesson Title</label>
+                    {{ form.title }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_content" class="form-label">Description</label>
+                    {{ form.content }}
+                </div>
+
+                <div class="mb-3">
+                    <label for="id_video_file" class="form-label">Lesson File (Video/PDF)</label>
+                    {{ form.video_file }}
+                </div>
+
+                <button type="submit" class="btn btn-primary px-4">Save Lesson</button>
+                <a href="{% url 'courses:details' course.id %}" class="btn btn-secondary ms-2">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
