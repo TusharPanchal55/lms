@@ -13,4 +13,7 @@ class CustomUser(AbstractUser):
         default = Role.STUDENT
     )
 
+    bio = models.TextField(blank=True)
+    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
+
 # Create your models here.
