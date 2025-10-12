@@ -4,7 +4,7 @@ from .forms import CustomUserCreationForm, ProfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
-
+from courses.models import Enrollment, Lesson, Progress, Course
 
 
 def signUp(request):
@@ -33,7 +33,30 @@ def login_view(request):
 def dashboard(request):
     user = request.user
     if user.role == "STUDENT":
-        return render(request, "users/student_db.html")
+        student = request.user
+        enrollments = Enrollment.objects.filter(student=student).select_related('course')
+        course_progress = []
+        for e in enrollments:
+            course = e.course
+            tot_lessons = course.lessons.count()
+            comp_lessons = Progress.objects.filter(
+                student = student,
+                lesson__course = course,
+                completed = True
+            ).count()
+            progress = (comp_lessons / tot_lessons * 100) if tot_lessons > 0 else 0
+
+            course_progress.append({
+                'course' : course,
+                'progress' : round(progress, 2),
+                'comp_lessons' : comp_lessons,
+                'tot_lessons' : tot_lessons,
+            })
+            context = {
+                'student' : student,
+                'course_progress' : course_progress,
+            }
+        return render(request, "users/student_db.html", context)
     elif user.role == "TEACHER":
         return render(request, "users/teacher_db.html")
     else:

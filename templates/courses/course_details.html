@@ -53,7 +53,7 @@
 
                     <!-- === Lessons Section === -->
                     <h4 class="mt-5">Lessons</h4>
-                    {% if course.lessons.all %}
+                    {% if course.lessons.exists %}
                         <ul class="list-group">
                             {% for lesson in course.lessons.all %}
                                 <li class="list-group-item bg-dark text-light">
@@ -67,6 +67,17 @@
                                         </div>
                                     {% endif %}
                                 </li>
+                                <br>
+
+                                    {% if lesson.id in completed_lessons %}
+                                        <p class="text-success">✅ Lesson Completed</p>
+                                    {% else %}
+                                        <form action="{% url 'courses:mark' lesson.id %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-success">Mark as Complete</button>
+                                        </form>
+                                    {% endif %}
+
                             {% endfor %}
                         </ul>
                     {% else %}

@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
+
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,21 +13,44 @@
     .card { background-color: #1e1e1e; border-radius: 1rem; box-shadow: 0 4px 20px rgba(0,0,0,.6); }
     .btn-logout { background: linear-gradient(135deg, #ff5252, #d32f2f); border: none; border-radius: 30px; padding: 0.6rem; }
     .btn-logout:hover { transform: scale(1.05); background: linear-gradient(135deg, #d32f2f, #ff5252); }
-    .text-light-custom { color: #fff; /* White text */ }
+    .text-light-custom { color: #fff; }
+    .progress { height: 18px; border-radius: 10px; }
+    .progress-bar { background: linear-gradient(135deg, #00c6ff, #0072ff); }
   </style>
 </head>
 <body>
-  {% block content %}
-  <div class="container d-flex justify-content-center align-items-center min-vh-100">
-    <div class="col-md-6">
-      <div class="card p-4 text-center">
-        <h2 class = "text-light-custom">Welcome, {{ request.user.username }} 👩‍🎓</h2>
-        <p class = "text-light-custom">This is your <strong>Student Dashboard</strong>.</p>
-        <div class="d-grid mt-3">
-          <a href="{% url 'users:logout' %}" class="btn btn-logout"><b>Logout</b></a>
-        </div>
-      </div>
+  <div class="container py-5">
+    <div class="text-center mb-4">
+      <h2 class="text-light-custom">Welcome, {{ student.username }}</h2>
+      <p class="text-light-custom">Here’s your <strong>learning progress</strong>.</p>
     </div>
+
+    {% if course_progress %}
+      <div class="row g-4">
+        {% for item in course_progress %}
+          <div class="col-md-6">
+            <div class="card p-4">
+              <h4>{{ item.course.title }}</h4>
+              <p class="mb-2 text-muted">{{ item.course.category }}</p>
+
+              <div class="progress mb-2">
+                <div class="progress-bar" role="progressbar" style="width: {{ item.progress }}%;" aria-valuenow="{{ item.progress }}" aria-valuemin="0" aria-valuemax="100">
+                  {{ item.progress }}%
+                </div>
+              </div>
+
+              <small class="text-light-custom">
+                {{ item.comp_lessons }} / {{ item.tot_lessons }} lessons completed
+              </small>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="text-center mt-5">
+        <h5 class="text-light-custom">You haven’t enrolled in any courses yet.</h5>
+      </div>
+    {% endif %}
   </div>
 </body>
 </html>

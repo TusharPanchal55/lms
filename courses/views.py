@@ -3,8 +3,10 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, request
 from .forms import CourseForm, LessonForm
 from django.shortcuts import get_object_or_404
-from .models import Course, Enrollment, Lesson
+from .models import Course, Enrollment, Lesson, Progress
 from django.db.models import Q
+from django.contrib import messages
+from django.utils import timezone
 
 @login_required
 def createCourse(request):
@@ -26,6 +28,8 @@ def createCourse(request):
 @login_required
 def courseDetails(request, course_id):
     course = get_object_or_404(Course, id=course_id)
+    lessons = course.lessons.all()
+    
 
     enrolled = False
     if request.user.is_authenticated and request.user.role == "STUDENT":
@@ -39,9 +43,13 @@ def courseDetails(request, course_id):
             elif "unenroll" in request.POST and enrolled:
                 Enrollment.objects.filter(student=request.user, course=course).delete()
                 return redirect("courses:details", course_id=course.id)
-
-
-    return render(request, "courses/course_details.html", {"course": course, "enrolled" : enrolled})
+    completed_lessons = []
+    if request.user.is_authenticated:
+        completed_lessons = Progress.objects.filter(
+            student = request.user,
+            completed = True
+        ).values_list('lesson_id', flat=True)
+    return render(request, "courses/course_details.html", {'course':course, 'lessons':lessons, 'completed_lessons':completed_lessons, 'enrolled':enrolled})
 
 @login_required
 def courseList(request):
@@ -110,4 +118,45 @@ def addLesson(request, course_id):
     else:
         form = LessonForm()
     return render(request, "courses/lesson_form.html", {"form":form, "course":course})
+
+@login_required
+def enroll_course(request, course_id):
+    course = get_object_or_404(Course, id = course_id)
+    if request.user.role != 'STUDENT':
+        messages.error(request, "Only Students can enroll!")
+        return redirect('courses:details', course_id=course.id)
+    
+    if request.method == 'POST':
+        if "enroll" in request.POST:
+            enrollment, created = Enrollment.objects.get_or_create(
+            student = request.user,
+            course = course
+            )
+
+            if created:
+                messages.success(request, "You have enrolled Successfully!")
+            else:
+                messages.info(request, "You have already enrolled for the course")
+        elif "unenroll" in request.POST:
+            Enrollment.objects.filter(student=request.user, course=course).delete()
+            messages.warning(request, "You have unenrolled from this course.")
         
+    return redirect('courses:details', course_id = course.id)
+
+@login_required
+def mark_lesson(request, lesson_id):
+    lesson = get_object_or_404(Lesson, id = lesson_id)
+    course = lesson.course
+    if not Enrollment.objects.filter(student=request.user, course=course).exists():
+        messages.error(request, "You must enroll for the course first!")
+        return redirect('courses:details', course_id=course.id)
+    progress, created = Progress.objects.get_or_create(
+        student = request.user,
+        lesson = lesson
+    )
+    progress.completed = True
+    progress.completed_at = timezone.now()
+    progress.save()
+
+    messages.success(request, f"Lesson Completed! '{lesson.title}'")
+    return redirect('courses:details', course_id=course.id)
