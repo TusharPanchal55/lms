@@ -1,34 +1,65 @@
 {% extends "base.html" %}
 {% load static %}
+
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Student Dashboard</title>
+  <title>Teacher Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
   <style>
     body { background-color: #121212; color: #eaeaea; font-family: 'Segoe UI'; }
     .card { background-color: #1e1e1e; border-radius: 1rem; box-shadow: 0 4px 20px rgba(0,0,0,.6); }
-    .btn-logout { background: linear-gradient(135deg, #ff5252, #d32f2f); border: none; border-radius: 30px; padding: 0.6rem; }
-    .btn-logout:hover { transform: scale(1.05); background: linear-gradient(135deg, #d32f2f, #ff5252); }
-    .text-light-custom { color: #fff; /* White text */ }
+    .btn-create, .btn-edit, .btn-view {
+      border: none; border-radius: 30px; padding: 0.5rem 1rem; transition: 0.3s;
+    }
+    .btn-create { background: linear-gradient(135deg, #00c6ff, #0072ff); color: white; }
+    .btn-edit { background: linear-gradient(135deg, #ff9800, #f44336); color: white; }
+    .btn-view { background: linear-gradient(135deg, #00e676, #00c853); color: white; }
+    .btn-create:hover, .btn-edit:hover, .btn-view:hover { transform: scale(1.05); }
   </style>
 </head>
 <body>
-  
-{% block content %}
-  <div class="container d-flex justify-content-center align-items-center min-vh-100">
-    <div class="col-md-6">
-      <div class="card p-4 text-center">
-        <h2 class = "text-light-custom">Welcome, {{ request.user.username }} 👩‍🎓</h2>
-        <p class = "text-light-custom">This is your <strong>Teacher Dashboard</strong>.</p>
-        <div class="d-grid mt-3">
-          <a href="{% url 'users:logout' %}" class="btn btn-logout"><b>Logout</b></a>
-        </div>
-      </div>
+  <div class="container py-5">
+    <div class="text-center mb-4">
+      <h2>Welcome, {{ teacher.username }} 👨‍🏫</h2>
+      <p>Your <strong>Teaching Dashboard</strong></p>
+      <a href="{% url 'courses:create' %}" class="btn btn-create mt-2">➕ Create New Course</a>
+      <a href="{% url 'users:logout' %}" class="btn btn-danger mt-2 ms-2">Logout</a>
     </div>
+
+    {% if course_stats %}
+      <div class="row g-4">
+        {% for item in course_stats %}
+          <div class="col-md-6">
+            <div class="card p-4">
+              <h4>{{ item.course.title }}</h4>
+              <p class="text-muted mb-2">{{ item.course.category }}</p>
+
+              {% if item.course.thumbnail %}
+                <img src="{{ item.course.thumbnail.url }}" class="img-fluid rounded mb-3" alt="Course Thumbnail">
+              {% endif %}
+
+              <p><strong>{{ item.lessons_count }}</strong> Lessons | <strong>{{ item.students_enrolled }}</strong> Enrolled Students</p>
+
+
+              <div class="d-flex justify-content-between">
+                <a href="{% url 'courses:details' item.course.id %}" class="btn btn-view btn-sm">View</a>
+                <a href="{% url 'courses:edit' item.course.id %}" class="btn btn-edit btn-sm">Edit</a>
+                <a href="{% url 'courses:add_lesson' item.course.id %}" class="btn btn-create btn-sm">Add Lesson</a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="text-center mt-5">
+        <h5>You haven’t created any courses yet.</h5>
+      </div>
+    {% endif %}
   </div>
 </body>
 </html>
-
 {% endblock %}

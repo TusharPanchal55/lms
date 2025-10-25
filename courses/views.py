@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, request
 from .forms import CourseForm, LessonForm
 from django.shortcuts import get_object_or_404
-from .models import Course, Enrollment, Lesson, Progress
+from .models import Course, Enrollment, Lesson, Progress, Quiz, Question, Answer, StudentQuizAttempt
 from django.db.models import Q
 from django.contrib import messages
 from django.utils import timezone
@@ -160,3 +160,74 @@ def mark_lesson(request, lesson_id):
 
     messages.success(request, f"Lesson Completed! '{lesson.title}'")
     return redirect('courses:details', course_id=course.id)
+
+
+@login_required
+def quiz_list(request, lesson_id):
+    lesson = get_object_or_404(Lesson, id=lesson_id)
+    quizzes = Quiz.objects.filter(lesson=lesson)
+    return render(request, "courses/quiz_list.html", {"lesson": lesson, "quizzes": quizzes})
+
+
+
+
+@login_required
+def take_quiz(request, quiz_id):
+    quiz = get_object_or_404(Quiz, id=quiz_id)
+    questions = quiz.questions.all()
+    
+
+    if request.method == "POST":
+        score = 0
+        results = []
+
+        for question in questions:
+            selected_answer_id = request.POST.get(f"question_{question.id}")
+            correct_answer = question.answers.filter(is_correct=True).first()
+
+            if selected_answer_id:
+                answer = Answer.objects.get(id=selected_answer_id)
+                is_correct = answer.is_correct
+            else:
+                is_correct = False
+
+            if is_correct:
+                score += 1
+
+            results.append({
+                'question': question.text,
+                'selected': answer.text if selected_answer_id else None,
+                'correct': correct_answer.text,
+                'is_correct': is_correct
+            })
+
+        percentage = round((score / questions.count()) * 100, 2)
+
+        # Graded message
+        if percentage >= 90:
+            grade_msg = "Excellent!"
+        elif percentage >= 70:
+            grade_msg = "Good Job!"
+        elif percentage >= 50:
+            grade_msg = "Needs Improvement"
+        else:
+            grade_msg = "Better Luck Next Time"
+
+        attempt, created = StudentQuizAttempt.objects.get_or_create(
+            student=request.user,
+            quiz=quiz,
+            defaults={'score': score}
+        )
+        if not created:
+            attempt.score = score
+            attempt.save()
+
+        return render(request, 'courses/quiz_result.html', {
+            'quiz': quiz,
+            'score': score,
+            'percentage': percentage,
+            'grade_msg': grade_msg,
+            'results': results
+        })
+
+    return render(request, 'courses/take_quiz.html', {'quiz': quiz, 'questions': questions})

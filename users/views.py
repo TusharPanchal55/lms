@@ -57,8 +57,24 @@ def dashboard(request):
                 'course_progress' : course_progress,
             }
         return render(request, "users/student_db.html", context)
+    
     elif user.role == "TEACHER":
-        return render(request, "users/teacher_db.html")
+        print("Courses found:", Course.objects.filter(teacher=request.user))
+
+        teacher = request.user
+        courses = Course.objects.filter(teacher=teacher)
+
+        course_stats = []
+        for c in courses:
+            lessons_count = c.lessons.count()
+            students_enrolled = Enrollment.objects.filter(course=c).count()
+            course_stats.append({
+                'course' : c,
+                'lessons_count' : lessons_count,
+                'students_enrolled' : students_enrolled
+            })
+        context = {'teacher' : teacher, 'course_stats' : course_stats}
+        return render(request, "users/teacher_db.html", context)
     else:
         return redirect('users:login')
 
