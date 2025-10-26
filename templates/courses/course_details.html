@@ -70,7 +70,7 @@
                                 <br>
 
                                     {% if lesson.id in completed_lessons %}
-                                        <p class="text-success">✅ Lesson Completed</p>
+                                        <p class="text-success"> Lesson Completed</p>
                                     {% else %}
                                         <form action="{% url 'courses:mark' lesson.id %}" method="post">
                                         {% csrf_token %}
@@ -80,6 +80,21 @@
 
                             {% endfor %}
                         </ul>
+                        <h3 class="text-info mt-4">Available Quizzes 🧠</h3>
+
+{% if course.quizzes.all %}
+  <div class="list-group mt-3">
+    {% for quiz in course.quizzes.all %}
+      <div class="list-group-item bg-dark text-light d-flex justify-content-between align-items-center border-secondary mb-2 rounded">
+        <span>{{ quiz.title }}</span>
+        <a href="{% url 'courses:take_quiz' quiz.id %}" class="btn btn-sm btn-success">Take Quiz</a>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p class="text-muted mt-3">No quizzes available for this course yet.</p>
+{% endif %}
+
                     {% else %}
                         <p class="mt-2">No lessons yet.</p>
                     {% endif %}

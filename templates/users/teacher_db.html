@@ -2,64 +2,61 @@
 {% load static %}
 
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Teacher Dashboard</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <style>
-    body { background-color: #121212; color: #eaeaea; font-family: 'Segoe UI'; }
-    .card { background-color: #1e1e1e; border-radius: 1rem; box-shadow: 0 4px 20px rgba(0,0,0,.6); }
-    .btn-create, .btn-edit, .btn-view {
-      border: none; border-radius: 30px; padding: 0.5rem 1rem; transition: 0.3s;
-    }
-    .btn-create { background: linear-gradient(135deg, #00c6ff, #0072ff); color: white; }
-    .btn-edit { background: linear-gradient(135deg, #ff9800, #f44336); color: white; }
-    .btn-view { background: linear-gradient(135deg, #00e676, #00c853); color: white; }
-    .btn-create:hover, .btn-edit:hover, .btn-view:hover { transform: scale(1.05); }
-  </style>
-</head>
-<body>
-  <div class="container py-5">
-    <div class="text-center mb-4">
-      <h2>Welcome, {{ teacher.username }} 👨‍🏫</h2>
-      <p>Your <strong>Teaching Dashboard</strong></p>
-      <a href="{% url 'courses:create' %}" class="btn btn-create mt-2">➕ Create New Course</a>
-      <a href="{% url 'users:logout' %}" class="btn btn-danger mt-2 ms-2">Logout</a>
-    </div>
+<style>
+  body { background-color: #121212; color: #eaeaea; font-family: 'Segoe UI', sans-serif; }
+  .card { background-color: #1e1e1e; border-radius: 1rem; box-shadow: 0 4px 20px rgba(0,0,0,.6); }
+  .btn-create, .btn-edit, .btn-view { border: none; border-radius: 10px; padding: 0.5rem 1rem; transition: 0.3s; }
+  .btn-custom {  color: #fff; font-weight: 500; border: none; border-radius: 8px; padding: 6px 14px; transition: all 0.3s ease; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); }
+  .btn-view { background: linear-gradient(135deg, #43cea2, #185a9d); }
+  .btn-edit { background: linear-gradient(135deg, #36d1dc, #5b86e5); }
+  .btn-create { background: linear-gradient(135deg, #f7971e, #ffd200); color: #212529; }
+  .btn-custom:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); }
+  .action-buttons { display: flex; justify-content: flex-end; gap: 10px; }
+  
 
-    {% if course_stats %}
-      <div class="row g-4">
-        {% for item in course_stats %}
-          <div class="col-md-6">
-            <div class="card p-4">
-              <h4>{{ item.course.title }}</h4>
-              <p class="text-muted mb-2">{{ item.course.category }}</p>
+</style>
 
-              {% if item.course.thumbnail %}
-                <img src="{{ item.course.thumbnail.url }}" class="img-fluid rounded mb-3" alt="Course Thumbnail">
-              {% endif %}
+<div class="container py-5">
+  <div class="text-center mb-4">
+    <h2>Welcome, {{ teacher.username }} 👨‍🏫</h2>
+    <p>Your <strong>Teaching Dashboard</strong></p>
+    <a href="{% url 'courses:create' %}" class="btn btn-outline-primary">Create New Course</a>
+    <a href="{% url 'users:logout' %}" class="btn btn-danger">Logout</a>
+  </div>
 
-              <p><strong>{{ item.lessons_count }}</strong> Lessons | <strong>{{ item.students_enrolled }}</strong> Enrolled Students</p>
+  {% if course_stats %}
+    <div class="row g-4">
+      {% for item in course_stats %}
+        <div class="col-md-6">
+          <div class="card p-4">
+            <h4>{{ item.course.title }}</h4>
+            <br>
 
+            {% if item.course.thumbnail %}
+              <img src="{{ item.course.thumbnail.url }}" class="img-fluid rounded mb-3" alt="Course Thumbnail">
+            {% endif %}
 
-              <div class="d-flex justify-content-between">
-                <a href="{% url 'courses:details' item.course.id %}" class="btn btn-view btn-sm">View</a>
-                <a href="{% url 'courses:edit' item.course.id %}" class="btn btn-edit btn-sm">Edit</a>
-                <a href="{% url 'courses:add_lesson' item.course.id %}" class="btn btn-create btn-sm">Add Lesson</a>
-              </div>
+            <p><strong>{{ item.lessons_count }}</strong> Lessons | <strong>{{ item.students_enrolled }}</strong> Enrolled Students</p>
+
+            <div class="action-buttons mt-2">
+              <!-- Core actions -->
+              <a href="{% url 'courses:details' item.course.id %}" class="btn btn-custom btn-view btn-sm">View</a>
+              <a href="{% url 'courses:edit' item.course.id %}" class="btn btn-custom btn-edit btn-sm">Edit</a>
+              <a href="{% url 'courses:add_lesson' item.course.id %}" class="btn btn-custom btn-create btn-sm">Add Lesson</a>
+              <!-- Quiz actions -->
+              <a href="{% url 'courses:teacher_quizzes' item.course.id %}" class="btn btn-custom btn-view btn-sm">Manage Quizzes</a>
+              <a href="{% url 'courses:create_quiz' item.course.id %}" class="btn btn-custom btn-create btn-sm">Create Quiz</a>
             </div>
           </div>
-        {% endfor %}
-      </div>
-    {% else %}
-      <div class="text-center mt-5">
-        <h5>You haven’t created any courses yet.</h5>
-      </div>
-    {% endif %}
-  </div>
-</body>
-</html>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="text-center mt-5">
+      <h5>You haven’t created any courses yet.</h5>
+    </div>
+  {% endif %}
+</div>
 {% endblock %}

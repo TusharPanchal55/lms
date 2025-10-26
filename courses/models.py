@@ -82,41 +82,40 @@ class Progress(models.Model):
 
 
 class Quiz(models.Model):
-    lesson = models.OneToOneField(
-        Lesson,
+    course = models.ForeignKey(
+        'Course',
         on_delete=models.CASCADE,
-        related_name="quiz"
+        related_name='quizzes'
     )
-    title = models.CharField(max_length=200)
+    teacher = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='teacher_quizzes'
+    )
+    title = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Quiz for {self.lesson.title}"
+        return self.title
+
 
 
 class Question(models.Model):
-    quiz = models.ForeignKey(
-        Quiz,
-        on_delete=models.CASCADE,
-        related_name="questions"
-    )
-    text = models.CharField(max_length=300)
+    quiz = models.ForeignKey('Quiz', on_delete=models.CASCADE, related_name='questions')
+    text = models.CharField(max_length=500)
 
     def __str__(self):
         return self.text
 
 
 class Answer(models.Model):
-    question = models.ForeignKey(
-        Question,
-        on_delete=models.CASCADE,
-        related_name="answers"
-    )
-    text = models.CharField(max_length=200)
+    question = models.ForeignKey('Question', on_delete=models.CASCADE, related_name='answers')
+    text = models.CharField(max_length=300)
     is_correct = models.BooleanField(default=False)
 
     def __str__(self):
         return self.text
+
 
 
 class StudentQuizAttempt(models.Model):

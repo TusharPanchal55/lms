@@ -47,8 +47,8 @@ class QuestionInline(admin.StackedInline):
 
 @admin.register(Quiz)
 class QuizAdmin(admin.ModelAdmin):
-    list_display = ("title", "lesson", "created_at")
-    search_fields = ("text", "lesson__title")
+    list_display = ("title", "course", "teacher", "created_at")  # ✅ now uses course and teacher
+    search_fields = ("title", "course__title", "teacher__username")
     inlines = [QuestionInline]
 
 @admin.register(StudentQuizAttempt)

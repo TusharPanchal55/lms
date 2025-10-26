@@ -7,6 +7,10 @@ from .models import Course, Enrollment, Lesson, Progress, Quiz, Question, Answer
 from django.db.models import Q
 from django.contrib import messages
 from django.utils import timezone
+from django.contrib import messages
+from .models import Quiz, Question, Answer
+from courses.models import Lesson
+from .forms import QuizForm, QuestionForm, AnswerForm
 
 @login_required
 def createCourse(request):
@@ -160,6 +164,76 @@ def mark_lesson(request, lesson_id):
 
     messages.success(request, f"Lesson Completed! '{lesson.title}'")
     return redirect('courses:details', course_id=course.id)
+
+@login_required
+def teacher_quizzes(request, course_id):
+    course = get_object_or_404(Course, id=course_id, teacher=request.user)
+    quizzes = Quiz.objects.filter(course=course)
+    return render(request, 'courses/teacher_quizzes.html', {
+        'course': course,
+        'quizzes': quizzes
+    })
+
+
+@login_required
+def create_quiz(request, course_id):
+    course = get_object_or_404(Course, id=course_id, teacher=request.user)
+
+    if request.method == "POST":
+        quiz_form = QuizForm(request.POST)
+        if quiz_form.is_valid():
+            quiz = quiz_form.save(commit=False)
+            quiz.course = course
+            quiz.teacher = request.user
+            quiz.save()
+            # Redirect to the teacher quizzes page for this course
+            return redirect('courses:teacher_quizzes', course_id=course.id)
+    else:
+        quiz_form = QuizForm()
+
+    return render(request, 'courses/create_quiz.html', {'quiz_form': quiz_form, 'course': course})
+
+
+
+
+@login_required
+def add_question(request, quiz_id):
+    quiz = get_object_or_404(Quiz, id=quiz_id)
+
+    if request.method == 'POST':
+        form = QuestionForm(request.POST)
+        if form.is_valid():
+            question = form.save(commit=False)
+            question.quiz = quiz
+            question.save()
+            return redirect('courses:add_answer', question_id=question.id)
+    else:
+        form = QuestionForm()
+
+    return render(request, 'courses/add_question.html', {'form': form, 'quiz': quiz})
+
+
+@login_required
+def add_answer(request, question_id):
+    question = get_object_or_404(Question, id=question_id)
+    answers = question.answers.all()
+
+    if request.method == 'POST':
+        form = AnswerForm(request.POST)
+        if form.is_valid():
+            answer = form.save(commit=False)
+            answer.question = question
+            answer.save()
+            return redirect('courses:add_answer', question_id=question.id)
+    else:
+        form = AnswerForm()
+
+    return render(request, 'courses/add_answer.html', {
+        'form': form,
+        'question': question,
+        'answers': answers
+    })
+
 
 
 @login_required

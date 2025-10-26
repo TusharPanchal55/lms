@@ -16,36 +16,40 @@
 </head>
 <body>
 
-{% comment %}
-  Navbar is shown on all pages, but login/signup links work safely.
-{% endcomment %}
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm" style="padding: 0.4rem 1rem;">
+  <div class="container-fluid">
+    <h4 class="mb-0">
+      <a class="nav-link fw-bold text-info" href="{% url 'users:db' %}" style="font-size: 1.1rem;">LMS</a>
+    </h4>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container">
-    <h3><a class="nav-link" href="{% url 'users:db' %}">LMS</a></h3>
-    <ul class="navbar-nav ms-auto">
-      {% if user.is_authenticated %}
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'users:profile' %}">My Profile</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'courses:my' %}">My Courses</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'courses:course_list' %}">All Courses</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'users:logout' %}">Logout</a>
-        </li>
-      {% else %}
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'users:login' %}">Login</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'users:signup' %}">Sign Up</a>
-        </li>
-      {% endif %}
-    </ul>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav align-items-center">
+        {% if user.is_authenticated %}
+          <li class="nav-item mx-1">
+            <a class="nav-link text-light" href="{% url 'users:profile' %}">My Profile</a>
+          </li>
+          <li class="nav-item mx-1">
+            <a class="nav-link text-light" href="{% url 'courses:my' %}">My Courses</a>
+          </li>
+          <li class="nav-item mx-1">
+            <a class="nav-link text-light" href="{% url 'courses:course_list' %}">All Courses</a>
+          </li>
+          <li class="nav-item mx-1">
+            <a class="nav-link text-danger fw-semibold" href="{% url 'users:logout' %}">Logout</a>
+          </li>
+        {% else %}
+          <li class="nav-item mx-1">
+            <a class="nav-link text-light" href="{% url 'users:login' %}">Login</a>
+          </li>
+          <li class="nav-item mx-1">
+            <a class="nav-link text-light" href="{% url 'users:signup' %}">Sign Up</a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
   </div>
 </nav>
 
