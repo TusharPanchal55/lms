@@ -8,6 +8,7 @@
 ![Status](https://img.shields.io/badge/Project%20Phase-Completed-brightgreen)
 
 🧩 Overview
+<img width="888" height="550" alt="Project_WorkFlow" src="https://github.com/user-attachments/assets/4b447b52-5075-403c-9b6e-326e6296544e" />
 
 A full-featured Learning Management System built with Django and PostgreSQL, enabling teachers to create courses and quizzes while students can enroll, learn through video lessons, track progress, and take assessments.
 
