@@ -178,7 +178,7 @@ Access the App:
 
 ## 🖼️ Screenshots
 
-<img width="1360" height="636" alt="image" src="https://github.com/user-attachments/assets/8686efd9-9b58-455e-9e81-cf55e9f8060d" />
+[<img width="1360" height="636" alt="image" src="https://github.com/user-attachments/assets/8686efd9-9b58-455e-9e81-cf55e9f8060d" />](https://github.com/TusharPanchal55/lms/issues/1#issue-3558063752)
 
 <img width="1295" height="587" alt="image" src="https://github.com/user-attachments/assets/40543d45-b905-4b3b-8679-2762bfa90d39" />
 
