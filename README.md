@@ -141,7 +141,7 @@ LMS/
 ├── manage.py             # Django project manager
 └── requirements.txt      # Project dependencies
 
-⚡ Setup Instructions
+## ⚡ Setup Instructions
 
 Clone the repository
 
@@ -176,7 +176,17 @@ Access the App:
 
 🔐 Admin: http://127.0.0.1:8000/admin/
 
-🖼️ Screenshots
+## 🖼️ Screenshots
+
+<img width="1360" height="636" alt="image" src="https://github.com/user-attachments/assets/8686efd9-9b58-455e-9e81-cf55e9f8060d" />
+
+<img width="1295" height="587" alt="image" src="https://github.com/user-attachments/assets/40543d45-b905-4b3b-8679-2762bfa90d39" />
+
+<img width="1364" height="637" alt="image" src="https://github.com/user-attachments/assets/6451cb53-bdc1-4a50-94f1-e61c5f24c8b8" />
+
+<img width="1361" height="629" alt="image" src="https://github.com/user-attachments/assets/8dd224ff-2398-47b6-870d-3aa2cb454929" />
+
+
 🎓 Student Dashboard
 
 👨‍🏫 Teacher Dashboard
