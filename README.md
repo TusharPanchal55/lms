@@ -126,17 +126,20 @@ Database	PostgreSQL
 Frontend	HTML, CSS, Bootstrap
 Auth & Security	Django Auth System
 Storage	Local media (configurable to S3)
-📂 Project Structure
+
+## 📂 Project Structure
+```bash
 LMS/
 │
-├── users/                # User auth, registration, roles, dashboards
-├── courses/              # Course & Lesson management
+├── users/                # User authentication, registration, roles, dashboards
+├── courses/              # Course and lesson management
 ├── quizzes/              # Quiz and assessment module
 ├── templates/            # HTML templates
 ├── static/               # CSS, JS, and static assets
 ├── media/                # Uploaded thumbnails & videos
-├── manage.py
-└── requirements.txt
+│
+├── manage.py             # Django project manager
+└── requirements.txt      # Project dependencies
 
 ⚡ Setup Instructions
 
@@ -148,7 +151,6 @@ cd LMS
 
 Create a virtual environment & activate
 
->>>>>>> 2710054287a5e0dfacb68ddf0fd12d6dcc3d50a2
 python -m venv venv
 source venv/bin/activate   # For macOS/Linux
 venv\Scripts\activate      # For Windows
