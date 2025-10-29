@@ -102,14 +102,14 @@ python manage.py runserver
 
 🖼️ Screenshots
 
-
 | Section | Preview |
 |----------|----------|
-| 📝 SignUp Page | ![Sign Up](./assets/Sign_up.png) |
-| 🔐 Login Page | ![Login](./assets/Login.png) |
-| 🏠 Courses | ![Courses Page](./assets/Courses.png) |
-| 👨‍🏫 Teacher Dashboard | ![Teacher Dashboard](./assets/Teacher_Dashboard.png) |
-| 👩‍🎓 Student Dashboard | ![Student Dashboard](./assets/Student_Dashboard.png) |
+| 📝 Sign Up Page | ![Sign Up](./assets/sign_up.png) |
+| 🔐 Login Page | ![Login](./assets/login.png) |
+| 🏠 Courses | ![Courses Page](./assets/courses.png) |
+| 👨‍🏫 Teacher Dashboard | ![Teacher Dashboard](./assets/teacher_dashboard.png) |
+| 👩‍🎓 Student Dashboard | ![Student Dashboard](./assets/student_dashboard.png) |
+
 
 
 
