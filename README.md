@@ -106,11 +106,11 @@ python manage.py runserver
 
 | Section | Preview |
 |----------|----------|
-| 📝 Sign Up Page | <img src="./assets/signup.png" width="700"/> |
-| 🔐 Login Page | <img src="./assets/login.png" width="700"/> |
-| 🏠 Courses Page | <img src="./assets/courses.png" width="700"/> |
-| 👨‍🏫 Teacher Dashboard | <img src="./assets/teacher_dashboard.png" width="700"/> |
-| 👩‍🎓 Student Dashboard | <img src="./assets/student_dashboard.png" width="700"/> |
+| 📝 Sign Up Page | <img src="assets/signup.png" width="700"/> |
+| 🔐 Login Page | <img src="assets/login.png" width="700"/> |
+| 🏠 Courses Page | <img src="assets/courses.png" width="700"/> |
+| 👨‍🏫 Teacher Dashboard | <img src="assets/teacher_dashboard.png" width="700"/> |
+| 👩‍🎓 Student Dashboard | <img src="assets/student_dashboard.png" width="700"/> |
 
 
 
